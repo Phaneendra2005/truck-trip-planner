@@ -16,39 +16,48 @@ function App() {
     setResults(null)
 
     try {
+      // 🔴 FIX 1 — Send correct field names
+      const payload = {
+        pickup_location: data.pickup,
+        dropoff_location: data.dropoff,
+        current_cycle_used: data.cycle,
+        current_location: data.current_location || ""
+      }
+
       const response = await axios.post(
-        'http://localhost:8000/api/plan-trip/',
-        data
+        'https://truck-trip-planner-ka19.onrender.com/api/plan-trip/',
+        payload
       )
 
       const apiData = response.data
 
-      console.log("LOGS FULL:", JSON.stringify(apiData.logs, null, 2))
       console.log("API RESPONSE:", apiData)
 
-      // 🔴 Normalize backend → frontend structure
+      // 🔴 FIX 2 — Correct backend keys
       const normalized = {
-        route_geometry: apiData.geometry || [],
+        route_geometry: apiData.route_geometry || [],
         summary: {
-          distance_miles: parseFloat(apiData.summary?.distance) || 0,
-          duration_hours: parseFloat(apiData.summary?.duration) || 0,
+          distance: apiData.summary?.distance || "0 mi",
+          duration: apiData.summary?.duration || "0 hr",
         },
         logs: (apiData.logs || []).map(log => ({
-  day: log.day,
-  segments: (log.events || []).map(e => ({
-    type:
-      e.status === "DRV" ? "driving" :
-      e.status === "ON" ? "on_duty" :
-      e.status === "SB" ? "sleeper" :
-      "off_duty",
-    hours: e.duration || 0
-  }))
-})) // may be empty if backend doesn’t send
+          day: log.day,
+          segments: (log.events || []).map(e => ({
+            type:
+              e.status === "DRV" ? "driving" :
+              e.status === "ON" ? "on_duty" :
+              e.status === "SB" ? "sleeper" :
+              "off_duty",
+            hours: e.duration || 0
+          }))
+        }))
       }
 
       setResults(normalized)
 
     } catch (err) {
+      console.error(err)
+
       if (err.response?.data?.error) {
         setError(err.response.data.error)
       } else {
@@ -114,7 +123,5 @@ function App() {
     </div>
   )
 }
-
-
 
 export default App
