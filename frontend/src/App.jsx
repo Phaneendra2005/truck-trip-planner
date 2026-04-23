@@ -18,9 +18,9 @@ function App() {
     try {
       // 🔴 FIX 1 — Send correct field names
       const payload = {
-        pickup_location: data.pickup,
-        dropoff_location: data.dropoff,
-        current_cycle_used: data.cycle,
+        pickup_location: data.pickup_location,
+        dropoff_location: data.dropoff_location,
+        current_cycle_used: data.current_cycle_used,
         current_location: data.current_location || ""
       }
 
