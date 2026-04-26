@@ -63,7 +63,3 @@ The application features:
 3.  Update the Root Directory to `frontend`.
 4.  In the Build Command, ensure it runs `npm run build`.
 5.  Set `VITE_API_URL` to your live backend endpoint in Vercel settings and update `App.jsx` to rely on that Env Variable instead of localhost. Create the deployment and get the live link.
-
-## Live Links & Demo
--   **Frontend (Vercel):** [Link Here]
--   **Backend (Render):** [Link Here]
